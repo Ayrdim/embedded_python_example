@@ -1,7 +1,7 @@
 # embedded_python_example
 
 This requires you to have installed 
-- python3-devel-3.10
+- python3.10-devel
 - Python 3.10
 
 Command I used to compile & run
