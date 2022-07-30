@@ -9,5 +9,4 @@ Commands I use to compile & run
 - Run 'tests' via: ./main
 - Run custom via something like this: ./main scripts.valid transform "my name jeff" 32
     - Note: The program is hardcoded to look in the scrips dir for python scripts
-    -       The program expects that the python function takes in a single argument (string)
-            and returns a single value (string)
+    - Note: The program expects that the python function takes in a single argument (string) and returns a single value (string)
