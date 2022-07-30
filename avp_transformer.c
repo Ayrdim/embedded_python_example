@@ -2,43 +2,40 @@
 #include "avp_transformer.h"
 #include <string.h>
 
+static const char *SCRIPT_PATH = ".";
 
-static const char * SCRIPT_PATH = ".";
-
-
-static PyObject * callPythonFunctionFromModule(
-    char const * const moduleName,
-    char const * const functionName,
-    char const * const arg);
-static PyObject * getPythonFunctionFromModule(
-    const char * const moduleName,
-    const char * const functionName);
-static PyObject * getPythonFunctionFromModule(
-    const char * const moduleName,
-    const char * const functionName);
-static PyObject * importPythonModule(const char * const moduleName);
+static PyObject *callPythonFunctionFromModule(
+    char const *const moduleName,
+    char const *const functionName,
+    char const *const arg);
+static PyObject *getPythonFunctionFromModule(
+    const char *const moduleName,
+    const char *const functionName);
+static PyObject *getPythonFunctionFromModule(
+    const char *const moduleName,
+    const char *const functionName);
+static PyObject *importPythonModule(const char *const moduleName);
 static int updateValue(
-    char * const value,
+    char *const value,
     unsigned int maxValSz,
-    PyObject * pyResult);
-
+    PyObject *pyResult);
 
 int AVP_TransformValue(
-    char const * const moduleName,
-    char const * const functionName,
-    char * const value,
+    char const *const moduleName,
+    char const *const functionName,
+    char *const value,
     unsigned int maxValSz)
 {
     int isFailed = 1;
 
     if ((NULL != moduleName) &&
-        (NULL != functionName) && 
+        (NULL != functionName) &&
         (NULL != value))
     {
         PyObject *pyResult = NULL;
         setenv("PYTHONPATH", SCRIPT_PATH, 1);
         Py_Initialize();
-        
+
         if ((pyResult = callPythonFunctionFromModule(moduleName, functionName, value)))
         {
             isFailed = updateValue(value, maxValSz, pyResult);
@@ -54,12 +51,12 @@ int AVP_TransformValue(
     return isFailed;
 }
 
-static PyObject * callPythonFunctionFromModule(
-    char const * const moduleName,
-    char const * const functionName,
-    char const * const arg)
+static PyObject *callPythonFunctionFromModule(
+    char const *const moduleName,
+    char const *const functionName,
+    char const *const arg)
 {
-    char * result = NULL;
+    char *result = NULL;
     PyObject *pyFunction = NULL;
     PyObject *pyResult = NULL;
 
@@ -72,13 +69,13 @@ static PyObject * callPythonFunctionFromModule(
     return pyResult;
 }
 
-static PyObject * getPythonFunctionFromModule(
-    const char * const moduleName,
-    const char * const functionName)
+static PyObject *getPythonFunctionFromModule(
+    const char *const moduleName,
+    const char *const functionName)
 {
-    PyObject * pyFunction = NULL;
-    PyObject * pyModule = NULL;
-    
+    PyObject *pyFunction = NULL;
+    PyObject *pyModule = NULL;
+
     if ((pyModule = importPythonModule(moduleName)))
     {
         pyFunction = PyObject_GetAttrString(pyModule, functionName);
@@ -88,9 +85,9 @@ static PyObject * getPythonFunctionFromModule(
     return pyFunction;
 }
 
-static PyObject * importPythonModule(const char * const moduleName)
+static PyObject *importPythonModule(const char *const moduleName)
 {
-    PyObject * pyModule = NULL;
+    PyObject *pyModule = NULL;
     PyObject *pyModuleName = NULL;
 
     if ((pyModuleName = PyUnicode_FromString(moduleName)))
@@ -103,12 +100,12 @@ static PyObject * importPythonModule(const char * const moduleName)
 }
 
 static int setValue(
-    char * const value,
+    char *const value,
     unsigned int maxValSz,
-    char const * const newVal)
+    char const *const newVal)
 {
     int isFailed = 1;
-    size_t newValSz = strlen(newVal); 
+    size_t newValSz = strlen(newVal);
 
     if (newValSz < maxValSz)
     {
@@ -124,14 +121,14 @@ static int setValue(
 }
 
 static int updateValue(
-    char * const value,
+    char *const value,
     unsigned int maxValSz,
-    PyObject * pyResult)
+    PyObject *pyResult)
 {
     int isFailed = 1;
-    char * newVal = NULL;
+    char *newVal = NULL;
     PyObject *pyBytes = NULL;
-    
+
     if ((pyBytes = PyUnicode_AsUTF8String(pyResult)))
     {
         newVal = PyBytes_AsString(pyBytes);

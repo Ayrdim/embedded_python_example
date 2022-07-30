@@ -3,14 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-void runTest(char const * const testTitle, char const * const moduleName, char const * const functionName, char * const value, unsigned int maxValSz);
+void runTest(char const *const testTitle, char const *const moduleName, char const *const functionName, char *const value, unsigned int maxValSz);
 
 int main(int argc, char *argv[])
 {
     /* Default operation is to run tests */
     if (1 == argc)
     {
-        enum { MAX_VAL_SZ = 32 };
+        enum
+        {
+            MAX_VAL_SZ = 32
+        };
         char value[MAX_VAL_SZ] = "value set in c";
 
         runTest("Valid transform", "scripts.valid", "transform", value, MAX_VAL_SZ);
@@ -24,14 +27,14 @@ int main(int argc, char *argv[])
         runTest("Script function has no args", "scripts.invalidNoArgs", "transform", value, MAX_VAL_SZ);
         runTest("Script function has extra args", "scripts.invalidNotEnoughArgs", "transform", value, MAX_VAL_SZ);
         runTest("Script returns None", "scripts.invalidReturnNone", "transform", value, MAX_VAL_SZ);
-        runTest("Script returns a string bigger than our buffer", "scripts.invalidReturnTooBig", "transform", value, MAX_VAL_SZ);        
+        runTest("Script returns a string bigger than our buffer", "scripts.invalidReturnTooBig", "transform", value, MAX_VAL_SZ);
     }
     else if (5 == argc)
     {
-        char const * const moduleName = argv[1];
-        char const * const functionName = argv[2];
+        char const *const moduleName = argv[1];
+        char const *const functionName = argv[2];
         unsigned int maxValSz = atoi(argv[4]);
-        char * const value = malloc(maxValSz * sizeof(char));
+        char *const value = malloc(maxValSz * sizeof(char));
 
         strncpy(value, argv[3], maxValSz);
         printf("Calling transform with the following:\n");
@@ -52,8 +55,7 @@ int main(int argc, char *argv[])
     }
 }
 
-
-void runTest(char const * const testTitle, char const * const moduleName, char const * const functionName, char * const value, unsigned int maxValSz)
+void runTest(char const *const testTitle, char const *const moduleName, char const *const functionName, char *const value, unsigned int maxValSz)
 {
     if (NULL != value)
     {
